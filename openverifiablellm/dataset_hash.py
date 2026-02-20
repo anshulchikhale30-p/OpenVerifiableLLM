@@ -1,8 +1,9 @@
 import hashlib
 from pathlib import Path
+from typing import Union
 
 
-def compute_sha256(file_path: str) -> str:
+def compute_sha256(file_path: Union[str, Path]) -> str:
     """
     Compute SHA256 hash of a file.
 
@@ -11,8 +12,8 @@ def compute_sha256(file_path: str) -> str:
 
     Parameters
     ----------
-    file_path : str
-        Path to the dataset file.
+    file_path : Union[str, Path]
+        Path to the dataset file (string or Path-like).
 
     Returns
     -------

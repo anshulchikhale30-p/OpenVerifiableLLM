@@ -9,10 +9,10 @@ def test_correct_sha256_output(tmp_path):
     # Create a temporary file
     file = tmp_path / "sample.txt"
     content = "hello wikipedia"
-    file.write_text(content)
+    file.write_text(content, encoding="utf-8")
 
     # Expected hash using standard hashlib
-    expected = hashlib.sha256(content.encode()).hexdigest()
+    expected = hashlib.sha256(content.encode("utf-8")).hexdigest()
 
     # Hash using your function
     actual = compute_sha256(str(file))
@@ -21,22 +21,14 @@ def test_correct_sha256_output(tmp_path):
     assert actual == expected
 
 
-def test_different_content_different_hash():
-    with tempfile.NamedTemporaryFile(delete=False, mode="w") as f1:
-        f1.write("Content A")
-        path1 = f1.name
+def test_different_content_different_hash(tmp_path):
+    file1 = tmp_path / "content_a.txt"
+    file2 = tmp_path / "content_b.txt"
 
-    with tempfile.NamedTemporaryFile(delete=False, mode="w") as f2:
-        f2.write("Content B")
-        path2 = f2.name
+    file1.write_text("Content A", encoding="utf-8")
+    file2.write_text("Content B", encoding="utf-8")
 
-    hash1 = compute_sha256(path1)
-    hash2 = compute_sha256(path2)
-
-    assert hash1 != hash2
-
-    os.remove(path1)
-    os.remove(path2)
+    assert compute_sha256(file1) != compute_sha256(file2)
 
 
 def test_file_not_found():
